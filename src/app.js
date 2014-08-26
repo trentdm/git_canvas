@@ -3,8 +3,50 @@ var repeat = require('repeat');
 var fs = require('fs');
 var config = require('./config.json');
 
+var getLetterArray = function(letter) {
+    switch(letter) {
+        case 'a':
+            return [
+                0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,
+                0,4,4,4,4,0,0,
+                4,1,0,0,4,0,0,
+                4,1,0,0,4,0,0,
+                0,4,4,4,4,4,0,
+                0,0,0,0,0,0,0
+            ];
+            break;
+        case 'b':
+            return [
+                0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0
+            ];
+            break;
+        default:
+            throw new Error('Unsupported character, ' + letter);
+    }
+};
+
+var getCanvas = function(){
+    if(config.input != null && config.input.length > 7)
+        throw new Error('Input must be 7 characters or fewer.');
+
+    var canvas = [];
+
+    config.input.forEach(function(letter){
+      var letterCanvas = getLetterArray(letter);
+      canvas.concat(letterCanvas);
+    })
+};
+
 var requiresUpdate = function(){
-    //converts input to 7x50 grid, gets commit schedule, if on scheduled day returns true
+    //converts input to 7x49 grid, gets commit schedule, checks existing commits for the day,
+    //adds commit(s) if there are remaining commits for the day
     return true;
 }
 
