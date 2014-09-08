@@ -1,4 +1,5 @@
 {
     "input" : "hello",
-    "repo_url" : "https://github.com/trentdm/git_canvas.git"
+    "repo_url" : "https://github.com/trentdm/git_canvas.git",
+    "file" : "bucket.txt"
 }

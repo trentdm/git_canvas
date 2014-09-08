@@ -1,6 +1,7 @@
 var gift = require('gift');
 var repeat = require('repeat');
 var fs = require('fs');
+var gm = require('gm');
 var config = require('./config.json');
 
 var getLetterArray = function(letter) {
@@ -136,11 +137,8 @@ var getCanvas = function(input){
         throw new Error('Input must be 7 characters or fewer.');
 
     var canvas = [];
-
-    config.input.forEach(function(letter){
-      var letterCanvas = getLetterArray(letter);
-      canvas.concat(letterCanvas);
-    })
+    gm("img.png").drawText(0, 0, input);
+    gm("img.png").resize(50, 7);
 };
 
 var getJulian = function(date) {
@@ -154,10 +152,22 @@ var getRequiredCommits = function(){
     return canvas[julian];
 }
 
-var addCommit = function() {
-    fs.appendFile('bucket.txt', new Date(), function (error) {
+var appendFile = function() {
+    fs.appendFile(config.file, new Date(), [], function (error) {
         if(error) throw error;
     });
+}
+
+var addCommit = function() {
+    var repo = gift(config.repo_url);
+    if(repo == undefined)
+        throw new Error("Failed to get repo.");
+
+    repo.commit("Updated " + config.file, [], function(error) {
+        if(error) throw error;
+    });
+
+    console.log(repo);
 }
 
 var commitChange = function() {
@@ -165,7 +175,7 @@ var commitChange = function() {
     if(repo == undefined)
         throw new Error("Failed to get repo.");
 
-    repo.commit("Updated bucket.txt.", [], function(error) {
+    repo.push("Updated " + config.file, [], function(error) {
         if(error) throw error;
     });
 
@@ -178,9 +188,10 @@ var updateCanvas = function() {
     {
         var requiredCommits = getRequiredCommits();
         for(var i = 0; i < requiredCommits; i++) {
+            appendFile();
             addCommit();
-            commitChange();
         }
+        commitChange();
     }
     catch(error){
         console.log("Error: " + error)
