@@ -2,6 +2,7 @@ var gift = require('gift');
 var repeat = require('repeat');
 var fs = require('fs');
 var gm = require('gm');
+var png = require('png-js');
 var config = require('./config.json');
 
 var getLetterArray = function(letter) {
@@ -136,9 +137,14 @@ var getCanvas = function(input){
     if(input != null && input.length > 7)
         throw new Error('Input must be 7 characters or fewer.');
 
-    var canvas = [];
-    gm("img.png").drawText(0, 0, input);
-    gm("img.png").resize(50, 7);
+    gm('img.png').drawText(0, 0, input);
+    gm('img.png').resize(50, 7).colorspace('GRAY');
+
+    png.decode('img.png', function(pixels) {
+        var canvas = [];
+        //convert pixel color to 1-4 scale.
+        // pixels is a 1d array (in rgba order) of decoded pixel data.
+    });
 };
 
 var getJulian = function(date) {
@@ -149,7 +155,11 @@ var getJulian = function(date) {
 var getRequiredCommits = function(){
     var canvas = getCanvas(config.input);
     var julian =  getJulian(new Date());
-    return canvas[julian];
+
+    if(canvas.length > julian)
+        return canvas[julian];
+    else
+        return 0;
 }
 
 var appendFile = function() {
