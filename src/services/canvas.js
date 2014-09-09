@@ -6,11 +6,12 @@ var getCanvas = function(input){
         throw new Error('GetCanvas requires a string that is 7 characters or fewer.');
 
     gm('./services/canvas.png')
+        .font("Helvetica.ttf", 12)
         .drawText(0, 0, input)
         .resize(50, 7).colorspace('GRAY')
-        .write('./services/temp/canvas.png', function (error) {
+        .write('/../temp/canvas.png', function (error) {
             if (!error)
-                png.decode('./temp/canvas.png', function(pixels) {
+                png.decode('/../temp/canvas.png', function(pixels) {
                     var canvas = [];
                     //convert pixel color to 1-4 scale.
                     // pixels is a 1d array (in rgba order) of decoded pixel data.
