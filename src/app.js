@@ -41,4 +41,5 @@ var updateCanvas = function() {
     }
 }
 
-repeat(updateCanvas).every(24, 'h').start.now()
+//repeat(updateCanvas).every(24, 'h').start.now()
+var data = canvas.getCanvas(config.input);
