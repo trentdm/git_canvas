@@ -1,9 +1,8 @@
-var gift = require('gift');
-var repeat = require('repeat');
 var fs = require('fs');
-var gm = require('gm');
-var png = require('png-js');
+var repeat = require('repeat');
 var config = require('./config.json');
+var canvas = require('./services/canvas');
+var repo = require('./services/repo');
 
 var getLetterArray = function(letter) {
     switch(letter) {
@@ -133,19 +132,6 @@ var getLetterArray = function(letter) {
     }
 };
 
-var getCanvas = function(input){
-    if(input != null && input.length > 7)
-        throw new Error('Input must be 7 characters or fewer.');
-
-    gm('img.png').drawText(0, 0, input);
-    gm('img.png').resize(50, 7).colorspace('GRAY');
-
-    png.decode('img.png', function(pixels) {
-        var canvas = [];
-        //convert pixel color to 1-4 scale.
-        // pixels is a 1d array (in rgba order) of decoded pixel data.
-    });
-};
 
 var getJulian = function(date) {
     var onejan = new Date(date.getFullYear(),0,1);
@@ -153,7 +139,7 @@ var getJulian = function(date) {
 }
 
 var getRequiredCommits = function(){
-    var canvas = getCanvas(config.input);
+    var canvas = canvas.getCanvas(config.input);
     var julian =  getJulian(new Date());
 
     if(canvas.length > julian)
@@ -168,30 +154,6 @@ var appendFile = function() {
     });
 }
 
-var addCommit = function() {
-    var repo = gift(config.repo_url);
-    if(repo == undefined)
-        throw new Error("Failed to get repo.");
-
-    repo.commit("Updated " + config.file, [], function(error) {
-        if(error) throw error;
-    });
-
-    console.log(repo);
-}
-
-var commitChange = function() {
-    var repo = gift(config.repo_url);
-    if(repo == undefined)
-        throw new Error("Failed to get repo.");
-
-    repo.push("Updated " + config.file, [], function(error) {
-        if(error) throw error;
-    });
-
-    console.log(repo);
-}
-
 var updateCanvas = function() {
     console.log('updating canvas at ' + new Date())
     try
@@ -199,9 +161,9 @@ var updateCanvas = function() {
         var requiredCommits = getRequiredCommits();
         for(var i = 0; i < requiredCommits; i++) {
             appendFile();
-            addCommit();
+            repo.addCommit();
         }
-        commitChange();
+        repo.pushCommits();
     }
     catch(error){
         console.log("Error: " + error)
