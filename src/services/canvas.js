@@ -2,7 +2,6 @@ var gm = require('gm');
 var png = require('png-js');
 
 var getCanvas = function(input){
-    return [0,1,2];
     if(input != null && input.length > 7)
         throw new Error('Input must be 7 characters or fewer.');
 

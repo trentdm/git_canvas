@@ -10,11 +10,11 @@ var getJulian = function(date) {
 }
 
 var getRequiredCommits = function(){
-    var canvas = canvas.getCanvas(config.input);
+    var data = canvas.getCanvas(config.input);
     var julian =  getJulian(new Date());
 
-    if(canvas.length > julian)
-        return canvas[julian];
+    if(data.length > julian)
+        return data[julian];
     else
         return 0;
 }
