@@ -9,6 +9,7 @@ Requires installation of GraphicsMagick and Ghostscript for rendering of text as
 ##ToDo
 Finish converting text to image, reading bytes, and converting to grayscale (1-4).
 Finish git integration for adding and pushing commits.
+Incorporate async library to incorporate waits for async reading bytes and repo functions.
 
 ##Notes
 This project is provided for educational purposes.

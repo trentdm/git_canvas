@@ -33,10 +33,8 @@ var updateCanvas = function() {
         for(var i = 0; i < requiredCommits; i++) {
             appendFile();
             repo.addCommit(config.repo_url, "Updated " + config.file);
-            console.log('Commit added at ' + new Date())
         }
         repo.pushCommits(config.repo_url);
-        console.log('Commit pushed at ' + new Date())
     }
     catch(error){
         console.log("Error: " + error)
@@ -48,4 +46,4 @@ var updateCanvas = function() {
 
 //test methods
 //var data = canvas.getCanvas(config.input); //still need to get the ghostscript font issue sorted
-appendFile(); repo.addCommit();
+appendFile(); repo.addCommit(config.repo_url, "Updated " + config.file);

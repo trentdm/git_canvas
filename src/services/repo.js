@@ -8,9 +8,9 @@ var addCommit = function(repoUrl, message) {
     repo.commit(message, [], function(error) {
         if(error)
             throw error;
-    });
 
-    console.log(repo);
+        console.log('Add succeeded for: ' + repo);
+    });
 }
 
 var pushCommits = function(repoUrl) {
@@ -19,7 +19,10 @@ var pushCommits = function(repoUrl) {
         throw new Error("Failed to get repo.");
 
     repo.push("Updated " + config.file, [], function(error) {
-        if(error) throw error;
+        if(error)
+            throw error;
+
+        console.log('Commit pushed at ' + new Date())
     });
 
     console.log(repo);
