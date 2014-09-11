@@ -32,14 +32,20 @@ var updateCanvas = function() {
         var requiredCommits = getRequiredCommits();
         for(var i = 0; i < requiredCommits; i++) {
             appendFile();
-            repo.addCommit();
+            repo.addCommit(config.repo_url, "Updated " + config.file);
+            console.log('Commit added at ' + new Date())
         }
-        repo.pushCommits();
+        repo.pushCommits(config.repo_url);
+        console.log('Commit pushed at ' + new Date())
     }
     catch(error){
         console.log("Error: " + error)
     }
 }
 
+//running method
 //repeat(updateCanvas).every(24, 'h').start.now()
-var data = canvas.getCanvas(config.input);
+
+//test methods
+//var data = canvas.getCanvas(config.input); //still need to get the ghostscript font issue sorted
+appendFile(); repo.addCommit();
