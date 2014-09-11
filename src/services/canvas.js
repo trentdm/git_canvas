@@ -12,9 +12,16 @@ var getCanvas = function(input){
         .write('/../temp/canvas.png', function (error) {
             if (!error)
                 png.decode('/../temp/canvas.png', function(pixels) {
-                    var canvas = [];
-                    //convert pixel color to 1-4 scale.
                     // pixels is a 1d array (in rgba order) of decoded pixel data.
+                    //once have data generating, determine threshold points for converting grayscale shade to 0-4 scale.
+                    var canvas = [];
+
+                    for(var i = 0; i < pixels.length; i++){
+                        var scale = pixels[i] / 16; //completely arbitrary value, need to look at real data first
+                        canvas.push(scale);
+                    }
+
+                    return canvas;
                 });
         });
 };
