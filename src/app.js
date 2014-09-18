@@ -1,5 +1,6 @@
 var fs = require('fs');
 var repeat = require('repeat');
+var promise = require('promise');
 var config = require('./config.json');
 var canvas = require('./services/canvas');
 var repo = require('./services/repo');
@@ -10,13 +11,14 @@ var getJulian = function(date) {
 };
 
 var getRequiredCommits = function(){
-    var data = canvas.getCanvas(config.input);
-    var julian =  getJulian(new Date());
+    return canvas.getCanvas(config.input).then(function(data) {
+        var julian =  getJulian(new Date());
 
-    if(data.length > julian)
-        return data[julian];
-    else
-        return 0;
+        if(data.length > julian)
+            return data[julian];
+        else
+            return 0;
+    });
 };
 
 var appendFile = function() {
@@ -29,14 +31,13 @@ var updateCanvas = function() {
     try
     {
         console.log('Updating canvas at ' + new Date());
-        var requiredCommits = getRequiredCommits();
-
-        for(var i = 0; i < requiredCommits; i++) {
-            appendFile();
-            repo.addCommit(config.repo_url, "Updated " + config.file);
-        }
-
-        repo.pushCommits(config.repo_url);
+        getRequiredCommits()
+            .then(function(requiredCommits){
+                for(var i = 0; i < requiredCommits; i++) {
+                    appendFile().then(repo.addCommit(config.repo_url, "Updated " + config.file));
+                }
+        })
+            .then(repo.pushCommits(config.repo_url));
     }
     catch(error){
         console.log("Error: " + error);
