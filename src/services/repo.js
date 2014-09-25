@@ -5,7 +5,7 @@ var addCommit = function(repoUrl, message) {
     if(repo == undefined)
         throw new Error("Failed to get repo.");
 
-    repo.commit(message, [], function(error) {
+    repo.commit(message, [{all: true}], function(error) {
         if(error)
             throw error;
 
